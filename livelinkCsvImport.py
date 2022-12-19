@@ -5,6 +5,7 @@ import os
 from os import listdir
 from os.path import isfile, join
 import pymel.core as pm
+from fbxExport import FBXExportMelEval
 
 def add_path(path):
     if path not in sys.path:
@@ -77,7 +78,6 @@ def setTimeLine():
     cmds.playbackOptions(min=start, max=end)
 
 def insertKey(facialPath, rigFile, outPutPath):
-
     onlyfiles = [f for f in listdir(facialPath) if (isfile(join(facialPath, f)) and f.endswith('.csv'))]
 
     facialName = 'Morpher'
@@ -92,5 +92,7 @@ def insertKey(facialPath, rigFile, outPutPath):
         cmds.file(rigFile, open=True, force=True)
         setKeyframes(facialName, animationArr)
         setTimeLine()
-        cmds.file(rename=outPutPath+'/'+fileName+".ma")
-        cmds.file(save=True, type="mayaAscii")
+        # cmds.file(rename=outPutPath+'/'+fileName+".ma")
+        # cmds.file(save=True, type="mayaAscii")
+        exportPath = outPutPath+'/'+fileName+'.fbx'.encode('unicode_escape')
+        FBXExportMelEval(exportPath)

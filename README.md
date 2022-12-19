@@ -1,14 +1,13 @@
 ```
 import sys
 
-sys.path.append(r'I:\script\bin\td\maya\scripts\mocapConvert')
+sys.path.append(r'D:\workspace\td\lts\livelinkCsvImport')
 
 import livelinkCsvImport
 reload(livelinkCsvImport)
-
 # Csv Path
-facialPath = 'T:/mocap/work/prod/mcp/Facial'
-rigFile = 'rig.fbx'
-outPutPath = 'output_folder'
+facialPath = r'facialPath'
+rigFile = r'J:\test_project\work\progress\mcp\satou\facial\rig\test.ma'
+outPutPath = r'outputPath'
 livelinkCsvImport.insertKey(facialPath, rigFile, outPutPath)
 ```
