@@ -92,7 +92,9 @@ def insertKey(facialPath, rigFile, outPutPath):
     facialName = 'Morpher'
 
     for f in onlyfiles:
-        basename_without_ext = os.path.splitext(os.path.basename(f))[0]
+        folderName = f.split('\\')
+        fname = folderName[-2]
+        # basename_without_ext = os.path.splitext(os.path.basename(f))[0]
         header, data = getData(f)
         data = cleanData(data)
         animationArr = createAnimationArr(header, data)
@@ -103,5 +105,5 @@ def insertKey(facialPath, rigFile, outPutPath):
         setTimeLine()
         # cmds.file(rename=outPutPath+'/'+fileName+".ma")
         # cmds.file(save=True, type="mayaAscii")
-        exportPath = outPutPath+'/'+basename_without_ext+'.fbx'.encode('unicode_escape')
+        exportPath = outPutPath+'/'+fname +'.fbx'.encode('unicode_escape')
         FBXExportMelEval(exportPath)
