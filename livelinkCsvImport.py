@@ -78,13 +78,21 @@ def setTimeLine():
     cmds.playbackOptions(min=start, max=end)
 
 def insertKey(facialPath, rigFile, outPutPath):
-    onlyfiles = [f for f in listdir(facialPath) if (isfile(join(facialPath, f)) and f.endswith('.csv'))]
+    excludeDir = 'livelinkFace'
+    onlyfiles = []
+    for path, subdirs, files in os.walk(facialPath):
+        for name in files:
+            if name.endswith('.csv'):
+                if excludeDir in path: continue
+                fpath = os.path.join(path, name)
+                onlyfiles.append(fpath)
 
+    # onlyfiles = [f for f in listdir(facialPath) if (isfile(join(facialPath, f)) and f.endswith('.csv'))]
+    print(onlyfiles)
     facialName = 'Morpher'
 
     for f in onlyfiles:
-        filePath = facialPath+'/'+f
-        header, data = getData(filePath)
+        header, data = getData(f)
         data = cleanData(data)
         animationArr = createAnimationArr(header, data)
         fileName = os.path.splitext(f)[0]
