@@ -6,6 +6,9 @@ from os import listdir
 from os.path import isfile, join
 import pymel.core as pm
 from fbxExport import FBXExportMelEval
+import timecode
+reload(timecode)
+from timecode import timecode_to_frames
 
 def add_path(path):
     if path not in sys.path:
@@ -17,20 +20,14 @@ def set_playback_range_to_fit_keyframes():
     pm.playbackOptions(maxTime=end_frame)
 
 def cleanData(data):
+    start = data[0][0]
     newData = []
-    lastTimeCode = 0
-    lastData = []
     for d in data:
         if len(d) < 1: continue
-        timeCode = int(d[0][-3:])
         if d[1] == "0": continue
-        if lastTimeCode > 0:
-            if timeCode - lastTimeCode > 1:
-                for i in range(0, timeCode - lastTimeCode):
-                    newData.append(lastData)
+        frame = timecode_to_frames(d[0],start)
+        d[0] = frame
         newData.append(d)
-        lastData = d
-        lastTimeCode = timeCode
     return newData
     
 def createAnimationArr(header, data):
@@ -38,8 +35,9 @@ def createAnimationArr(header, data):
     for d in data:
         if len(d) < 3: continue
         dataDict = {}
-        for i in range(2, 53):
-            dataDict[header[i]] = float(d[i])
+        for i in range(0, 53):
+            if i == 1: continue
+            dataDict[header[i]] = d[i]
         animationArr.append(dataDict)
     return animationArr
 
@@ -52,12 +50,12 @@ def selectNurbsCurve(nurbsCurveName):
     return ""
 
 def setKeyframes(facialName, data):
-    frame = 0
     for d in data:
+        frame = d["Timecode"]
         for key, val in d.items():
+            if key == "Timecode": continue
             key_lowercase = key[0].lower() + key[1:]
-            cmds.setKeyframe(facialName+'.'+key_lowercase, value=val, time=frame)
-        frame += 1
+            cmds.setKeyframe(facialName+'.'+key_lowercase, value=float(val), time=frame)
 
 def getData(path):
     data = []
@@ -74,7 +72,6 @@ def setTimeLine():
     if all_keys:
         start = int(all_keys[0])
         end = int(all_keys[-1])
-    print(start, end)
     cmds.playbackOptions(min=start, max=end)
 
 def insertKey(facialPath, rigFile, outPutPath):
@@ -101,6 +98,7 @@ def insertKey(facialPath, rigFile, outPutPath):
         fileName = os.path.splitext(f)[0]
         print(fileName)
         cmds.file(rigFile, open=True, force=True)
+        cmds.currentUnit(time='ntscf')
         setKeyframes(facialName, animationArr)
         setTimeLine()
         # cmds.file(rename=outPutPath+'/'+fileName+".ma")
