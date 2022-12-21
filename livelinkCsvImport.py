@@ -2,13 +2,13 @@ import csv
 import maya.cmds as cmds
 import sys
 import os
-from os import listdir
-from os.path import isfile, join
 import pymel.core as pm
 from fbxExport import FBXExportMelEval
 import timecode
 reload(timecode)
 from timecode import timecode_to_frames
+# from os import listdir
+# from os.path import isfile, join
 
 def add_path(path):
     if path not in sys.path:
