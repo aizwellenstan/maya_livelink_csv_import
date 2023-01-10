@@ -1,4 +1,4 @@
-framerate = 60
+framerate = 60.0
 
 def _seconds(value):
     if isinstance(value, str):  # value seems to be a timestamp

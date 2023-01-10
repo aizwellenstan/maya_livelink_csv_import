@@ -98,7 +98,9 @@ def insertKey(facialPath, rigFile, outPutPath):
         fileName = os.path.splitext(f)[0]
         print(fileName)
         cmds.file(rigFile, open=True, force=True)
-        cmds.currentUnit(time='ntscf')
+        # cmds.currentUnit(time='ntscf')
+        # cmds.currentUnit(time='48000fps')
+        cmds.currentUnit(time='ntsc')
         setKeyframes(facialName, animationArr)
         setTimeLine()
         # cmds.file(rename=outPutPath+'/'+fileName+".ma")
